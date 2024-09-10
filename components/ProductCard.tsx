@@ -1,9 +1,9 @@
+import React from 'react';
 import { IProduct } from '@/types/product';
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import Image from 'next/image';
-
 
 interface ProductCardProps {
   product: IProduct;
@@ -12,18 +12,16 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="h-full flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
-      <CardContent className="pt-4">
+      <CardContent className="p-4">
         <div className="aspect-square w-full relative mb-3">
           <Image
             src={product.thumbnail}
             alt={product.title}
             layout="fill"
             objectFit="cover"
-            priority
+            className="rounded-md"
+            sizes='100vw'
           />
-          <Badge className="absolute top-2 right-2" variant={product.stock > 0 ? "secondary" : "destructive"}>
-            {product.stock > 0 ? "In Stock" : "Out of Stock"}
-          </Badge>
         </div>
         <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.title}</h3>
         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{product.description}</p>
@@ -38,9 +36,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.category}
         </Badge>
       </CardContent>
-      <CardFooter className="text-sm text-muted-foreground">
-        {product.brand}
-      </CardFooter>
     </Card>
   );
 }
