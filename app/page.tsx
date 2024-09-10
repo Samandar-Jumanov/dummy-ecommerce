@@ -133,8 +133,8 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
-          <Link href="/post-new-product">
-            <Button className="bg-green-500 hover:bg-green-600 text-white">
+          <Link href="/new">
+            <Button className="bg-green-700 hover:bg-green-600 text-white">
               Post New Product
             </Button>
           </Link>
