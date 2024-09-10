@@ -5,7 +5,6 @@ import Link from "next/link";
 import { IProduct } from "@/types/product";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ProductDetails from "@/components/ProductDetails";
 import ImageGallery from "@/components/ImageGallery";
 import ReviewSection from "@/components/ReviewSection";
