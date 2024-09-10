@@ -5,10 +5,11 @@ import { IProduct } from '@/types/product';
 import { ICategory } from '@/types/category.type';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
 import ProductList from '@/components/ProductList';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import CategoryList from '@/components/CategoryList';
+import Cookies from "js-cookie";
+import { useRouter } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -24,14 +25,23 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  const router = useRouter();
 
   useEffect(() => {
     fetchCategories();
+    checkAuthStatus();
   }, []);
 
   useEffect(() => {
     fetchProducts();
   }, [searchQuery, sortBy, sortOrder, chosenCategories, currentPage]);
+
+  const checkAuthStatus = () => {
+    const token = Cookies.get("token");
+    setIsAuthenticated(!!token);
+  };
 
   const fetchCategories = async () => {
     setLoadingCategories(true);
@@ -39,12 +49,7 @@ export default function Home() {
       const res = await fetch('https://dummyjson.com/products/categories');
       if (!res.ok) throw new Error('Failed to fetch categories');
       const data: ICategory[] = await res.json();
-      const formattedCategories: ICategory[] = data.map(category => ({
-        slug: category.slug,
-        name:category. name,
-        url: category.url
-      }));
-      setCategories(formattedCategories);
+      setCategories(data);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Failed to load categories. Please try again later.');
@@ -62,7 +67,6 @@ export default function Home() {
       if (searchQuery) {
         url = `https://dummyjson.com/products/search?q=${searchQuery}&limit=${ITEMS_PER_PAGE}&skip=${(currentPage - 1) * ITEMS_PER_PAGE}`;
       } else if (chosenCategories.length > 0) {
-        // Fetch products for each chosen category
         const categoryPromises = chosenCategories.map(category => 
           fetch(`https://dummyjson.com/products/category/${category}?limit=${ITEMS_PER_PAGE}&skip=${(currentPage - 1) * ITEMS_PER_PAGE}`)
             .then(res => res.json())
@@ -120,6 +124,14 @@ export default function Home() {
     setCurrentPage(page);
   };
 
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      router.push('/new');
+    } else {
+      router.push('/login');
+    }
+  };
+
   if (error) {
     return (
       <Alert variant="destructive">
@@ -133,11 +145,12 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
-          <Link href="/new">
-            <Button className="bg-green-700 hover:bg-green-600 text-white">
-              Post New Product
-            </Button>
-          </Link>
+          <Button 
+            onClick={handleAuthAction}
+            className="bg-green-700 hover:bg-green-600 text-white"
+          >
+            {isAuthenticated ? "Post New Product" : "Login"}
+          </Button>
         </div>
         
         <SearchAndFilter
