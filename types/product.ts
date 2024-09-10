@@ -1,3 +1,5 @@
+import { IReview } from "./review.type";
+
 export type  IProduct  = {
     id: number;
     title: string;
@@ -10,4 +12,5 @@ export type  IProduct  = {
     category: string;
     thumbnail: string;
     images: string[];
+    reviews : IReview[]
   }
