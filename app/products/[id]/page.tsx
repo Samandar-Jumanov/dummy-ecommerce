@@ -10,6 +10,8 @@ import ProductDetails from "@/components/ProductDetails";
 import ImageGallery from "@/components/ImageGallery";
 import ReviewSection from "@/components/ReviewSection";
 import ActionButtons from "@/components/ActionButtons";
+import { fetchProduct } from "@/lib/fetchProducts";
+
 
 const Product = ({ params }: { params: { id: string } }) => {
   const [product, setProduct] = useState<IProduct | null>(null);
@@ -18,47 +20,11 @@ const Product = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const response = await fetch(`https://dummyjson.com/products/${params.id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch product");
-        }
-        const productData = await response.json();
-        setProduct(productData);
-      } catch (err) {
-        setError("An error occurred while fetching the product. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProduct();
+    fetchProduct(params.id , setProduct , setError , setLoading);
   }, [params.id]);
 
-  const handleDeleteProduct = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete this product?");
-    if (!confirmed) return;
 
-    try {
-      const response = await fetch(`https://dummyjson.com/products/${params.id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        alert("Product deleted successfully!");
-        router.push("/");
-      } else {
-        throw new Error("Failed to delete product");
-      }
-    } catch (err) {
-      alert("An error occurred while deleting the product. Please try again later.");
-    }
-  };
-
-  const handleUpdateProduct = () => {
-    router.push(`/products/${params.id}/edit`);
-  };
+ 
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
@@ -93,8 +59,7 @@ const Product = ({ params }: { params: { id: string } }) => {
 
         <ActionButtons
           stock={product.stock}
-          onUpdate={handleUpdateProduct}
-          onDelete={handleDeleteProduct}
+          id={product.id}
         />
       </div>
     </div>

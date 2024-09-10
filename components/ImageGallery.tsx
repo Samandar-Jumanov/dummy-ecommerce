@@ -10,7 +10,7 @@ interface ImageGalleryProps {
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, thumbnail, title }) => {
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
-      <div className="  relative w-full aspect-square rounded-lg overflow-hidden border-2 bg-green-400">
+      <div className="  relative w-full aspect-square rounded-lg overflow-hidden border-2 bg-green-100">
         <div className="absolute inset-0 p-2">
           <Image
             src={thumbnail}

@@ -1,7 +1,7 @@
 import { IReview } from "./review.type";
 
 export type  IProduct  = {
-    id: number;
+    id: string;
     title: string;
     description: string;
     price: number;
