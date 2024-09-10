@@ -11,7 +11,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
   return (
     <div className="flex justify-center items-center space-x-2 mt-8">
       <Button
-        variant="outline"
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -23,8 +22,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         Page {currentPage} of {totalPages}
       </span>
       <Button
-        variant="outline"
-        size="sm"
+          size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >

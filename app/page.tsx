@@ -19,7 +19,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [chosenCategories, setChosenCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -31,7 +31,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts();
-  }, [searchQuery, sortBy, sortOrder, selectedCategory, currentPage]);
+  }, [searchQuery, sortBy, sortOrder, chosenCategories, currentPage]);
 
   const fetchCategories = async () => {
     setLoadingCategories(true);
@@ -39,7 +39,12 @@ export default function Home() {
       const res = await fetch('https://dummyjson.com/products/categories');
       if (!res.ok) throw new Error('Failed to fetch categories');
       const data: ICategory[] = await res.json();
-      setCategories(data);
+      const formattedCategories: ICategory[] = data.map(category => ({
+        slug: category.slug,
+        name:category. name,
+        url: category.url
+      }));
+      setCategories(formattedCategories);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Failed to load categories. Please try again later.');
@@ -56,8 +61,18 @@ export default function Home() {
       
       if (searchQuery) {
         url = `https://dummyjson.com/products/search?q=${searchQuery}&limit=${ITEMS_PER_PAGE}&skip=${(currentPage - 1) * ITEMS_PER_PAGE}`;
-      } else if (selectedCategory !== 'all') {
-        url = `https://dummyjson.com/products/category/${selectedCategory}?limit=${ITEMS_PER_PAGE}&skip=${(currentPage - 1) * ITEMS_PER_PAGE}`;
+      } else if (chosenCategories.length > 0) {
+        // Fetch products for each chosen category
+        const categoryPromises = chosenCategories.map(category => 
+          fetch(`https://dummyjson.com/products/category/${category}?limit=${ITEMS_PER_PAGE}&skip=${(currentPage - 1) * ITEMS_PER_PAGE}`)
+            .then(res => res.json())
+        );
+        const categoryResults = await Promise.all(categoryPromises);
+        const allProducts = categoryResults.flatMap(result => result.products);
+        setProducts(allProducts);
+        setTotalPages(Math.ceil(allProducts.length / ITEMS_PER_PAGE));
+        setLoading(false);
+        return;
       }
 
       if (sortBy !== 'default') {
@@ -92,8 +107,12 @@ export default function Home() {
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategoryToggle = (categorySlug: string) => {
+    setChosenCategories(prev => 
+      prev.includes(categorySlug)
+        ? prev.filter(cat => cat !== categorySlug)
+        : [...prev, categorySlug]
+    );
     setCurrentPage(1);
   };
 
@@ -110,10 +129,10 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Our Products</h1>
+          <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
           <Link href="/post-new-product">
             <Button className="bg-green-500 hover:bg-green-600 text-white">
               Post New Product
@@ -134,8 +153,8 @@ export default function Home() {
           <div className="lg:w-1/4">
             <CategoryList
               categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={handleCategoryChange}
+              chosenCategories={chosenCategories}
+              onCategoryToggle={handleCategoryToggle}
               loading={loadingCategories}
             />
           </div>

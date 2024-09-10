@@ -20,7 +20,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   onSortOrderChange
 }) => {
   return (
-    <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center">
+    <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center ">
       <Input
         type="text"
         placeholder="Search products..."
@@ -28,7 +28,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
         onChange={(e) => onSearch(e.target.value)}
         className="w-full sm:w-96 shadow-sm"
       />
-      <Select onValueChange={onSortChange} value={sortBy}>
+      <Select onValueChange={onSortChange} value={sortBy} >
         <SelectTrigger className="w-full sm:w-48">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
