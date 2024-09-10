@@ -3,14 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { IProduct } from '@/types/product';
 import { ICategory } from '@/types/category.type';
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import ProductList from '@/components/ProductList';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import CategoryList from '@/components/CategoryList';
-import Cookies from "js-cookie";
 import { useRouter } from 'next/navigation';
-
+import useSidebar from '@/lib/hooks/useSidebar';
+import { Menu } from 'lucide-react';
 const ITEMS_PER_PAGE = 20;
 
 export default function Home() {
@@ -25,24 +24,18 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { openSidebar }  = useSidebar()
   
-  const router = useRouter();
 
   useEffect(() => {
     fetchCategories();
-    checkAuthStatus();
   }, []);
 
   useEffect(() => {
     fetchProducts();
   }, [searchQuery, sortBy, sortOrder, chosenCategories, currentPage]);
 
-  const checkAuthStatus = () => {
-    const token = Cookies.get("token");
-    setIsAuthenticated(!!token);
-  };
-
+  
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
@@ -124,65 +117,54 @@ export default function Home() {
     setCurrentPage(page);
   };
 
-  const handleAuthAction = () => {
-    if (isAuthenticated) {
-      router.push('/new');
-    } else {
-      router.push('/login');
-    }
-  };
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
+ 
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
-          <Button 
-            onClick={handleAuthAction}
-            className="bg-green-700 hover:bg-green-600 text-white"
-          >
-            {isAuthenticated ? "Post New Product" : "Login"}
-          </Button>
-        </div>
-        
-        <SearchAndFilter
-          searchQuery={searchQuery}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSearch={handleSearch}
-          onSortChange={handleSortChange}
-          onSortOrderChange={handleSortOrderChange}
-        />
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-1/4">
-            <CategoryList
-              categories={categories}
-              chosenCategories={chosenCategories}
-              onCategoryToggle={handleCategoryToggle}
-              loading={loadingCategories}
-            />
-          </div>
-          
-          <div className="lg:w-3/4">
-            <ProductList
-              products={products}
-              loading={loading}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </div>
-      </div>
+       { !error  ? (
+           <div className="container mx-auto px-4 py-8">
+           <div className="flex justify-between items-center mb-8">
+             <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
+             <Button 
+               onClick={openSidebar}
+             >
+               <Menu size={24} className="mr-2" />
+             </Button>
+           </div>
+           
+           <SearchAndFilter
+             searchQuery={searchQuery}
+             sortBy={sortBy}
+             sortOrder={sortOrder}
+             onSearch={handleSearch}
+             onSortChange={handleSortChange}
+             onSortOrderChange={handleSortOrderChange}
+           />
+           
+           <div className="flex flex-col lg:flex-row gap-8">
+             <div className="lg:w-1/4">
+               <CategoryList
+                 categories={categories}
+                 chosenCategories={chosenCategories}
+                 onCategoryToggle={handleCategoryToggle}
+                 loading={loadingCategories}
+               />
+             </div>
+             
+             <div className="lg:w-3/4">
+               <ProductList
+                 products={products}
+                 loading={loading}
+                 currentPage={currentPage}
+                 totalPages={totalPages}
+                 onPageChange={handlePageChange}
+               />
+             </div>
+           </div>
+         </div>
+       ) : (
+           <p className='text-red-500'>{error}</p>
+       ) }
     </div>
   );
 }
