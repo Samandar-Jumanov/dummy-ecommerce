@@ -1,7 +1,7 @@
 import React from 'react';
 import { IProduct } from '@/types/product';
 import ProductCard from '@/components/ProductCard';
-import ProductCardSkeleton from '@/components/ProductSkeleton';
+import ProductCardSkeleton from '@/components/helpers/ProductSkeleton';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Pagination from '@/components/Pagination';
 import Link from 'next/link';

@@ -12,14 +12,13 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     Cookies.remove('token');
-    // Add any additional logout logic here
   };
 
   if (!isOpen) return null;
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out" onClick={closeSidebar} />
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out p-3" onClick={closeSidebar} />
       <div className="fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-800 shadow-lg z-50 transform transition-transform duration-300 ease-in-out">
         <div className="flex flex-col h-full">
           <div className="flex justify-end p-4">
@@ -38,7 +37,7 @@ const Sidebar = () => {
                   <li>
                     <Link href="/account" className="flex items-center text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                       <User className="mr-3" size={22} />
-                      <span className="text-lg">User Account</span>
+                      <span className="text-lg"> Account</span>
                     </Link>
                   </li>
                   <li>

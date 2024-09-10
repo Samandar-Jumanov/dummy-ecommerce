@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import ProductList from '@/components/ProductList';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import CategoryList from '@/components/CategoryList';
-import { useRouter } from 'next/navigation';
 import useSidebar from '@/lib/hooks/useSidebar';
 import { Menu } from 'lucide-react';
+import ErrorPage from '@/components/helpers/Error';
 const ITEMS_PER_PAGE = 20;
 
 export default function Home() {
@@ -117,11 +117,14 @@ export default function Home() {
     setCurrentPage(page);
   };
 
+
+  if(error){
+      return <ErrorPage />
+  }
  
 
   return (
     <div className="bg-white min-h-screen">
-       { !error  ? (
            <div className="container mx-auto px-4 py-8">
            <div className="flex justify-between items-center mb-8">
              <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
@@ -162,9 +165,7 @@ export default function Home() {
              </div>
            </div>
          </div>
-       ) : (
-           <p className='text-red-500'>{error}</p>
-       ) }
+       
     </div>
   );
 }
