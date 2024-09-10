@@ -128,11 +128,6 @@ export default function Home() {
            <div className="container mx-auto px-4 py-8">
            <div className="flex justify-between items-center mb-8">
              <h1 className="text-3xl font-bold text-green-800">Next shop</h1>
-             <Button 
-               onClick={openSidebar}
-             >
-               <Menu size={24} className="mr-2" />
-             </Button>
            </div>
            
            <SearchAndFilter
