@@ -11,6 +11,7 @@ import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Menu } from 'lucide-react';
+import { ICategory } from '@/types/category.type';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -22,7 +23,7 @@ export default function ProductList() {
   const [sortBy, setSortBy] = useState('default');
   const [sortOrder, setSortOrder] = useState('asc');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isCategoryListOpen, setIsCategoryListOpen] = useState(false);
@@ -41,8 +42,8 @@ export default function ProductList() {
     try {
       const res = await fetch('https://dummyjson.com/products/categories');
       if (!res.ok) throw new Error('Failed to fetch categories');
-      const data: string[] = await res.json();
-      setCategories(['all', ...data]);
+      const data: ICategory[] = await res.json();
+      setCategories(data);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Failed to load categories. Please try again later.');
@@ -175,7 +176,7 @@ export default function ProductList() {
                 </div>
               ) : (
                 <div className={`space-y-2 ${isCategoryListOpen ? 'block' : 'hidden lg:block'}`}>
-                  {categories.map((category : any ) => (
+                  {categories.map((category : ICategory ) => (
                     <Button
                       key={category.slug}
                       onClick={() => handleCategoryChange(category.slug)}
@@ -185,7 +186,6 @@ export default function ProductList() {
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      {category === 'all' ? 'All Categories' : category.name}
                     </Button>
                   ))}
                 </div>

@@ -9,18 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IReview } from "@/types/review.type";
 
-interface Review {
-  rating: string;
-  comment: string;
-  date: string;
-  reviewerName: string;
-  reviewerEmail: string;
-}
 
 const Product = ({ params }: { params: { id: string } }) => {
   const [product, setProduct] = useState<IProduct | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<IReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,9 +25,7 @@ const Product = ({ params }: { params: { id: string } }) => {
         if (!response.ok) {
           throw new Error("Failed to fetch product or reviews");
         }
-
         const productData = await response.json();
-
         setProduct(productData);
         setReviews(productData.reviews || []);
       } catch (err) {
