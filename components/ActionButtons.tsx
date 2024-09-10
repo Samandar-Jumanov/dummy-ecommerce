@@ -54,6 +54,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ stock , id  }) => {
       <Button
         className="py-3 px-6 rounded-lg shadow-lg transform transition-all hover:scale-105 disabled:cursor-not-allowed"
         disabled={stock === 0 || isDeleting}
+        
       >
         <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
       </Button>

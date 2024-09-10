@@ -17,13 +17,10 @@ const Product = ({ params }: { params: { id: string } }) => {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetchProduct(params.id , setProduct , setError , setLoading);
   }, [params.id]);
-
-
  
 
   if (loading) {
