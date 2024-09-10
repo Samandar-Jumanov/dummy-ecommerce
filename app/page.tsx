@@ -3,12 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { IProduct } from '@/types/product';
 import { ICategory } from '@/types/category.type';
-import { Button } from "@/components/ui/button";
 import ProductList from '@/components/ProductList';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import CategoryList from '@/components/CategoryList';
-import useSidebar from '@/lib/hooks/useSidebar';
-import { Menu } from 'lucide-react';
 import ErrorPage from '@/components/helpers/Error';
 const ITEMS_PER_PAGE = 20;
 
@@ -24,7 +21,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const { openSidebar }  = useSidebar()
   
 
   useEffect(() => {

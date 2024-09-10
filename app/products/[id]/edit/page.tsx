@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
+import Image from "next/image";
+
 
 const EditProduct = ({ params }: { params: { id: string } }) => {
   const [product, setProduct] = useState<IProduct | null>(null);
@@ -67,7 +69,6 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
       setProduct(updatedProduct);
       setSuccess("Product updated successfully!");
       
-      // Simulating a delay before redirect
       setTimeout(() => router.push("/"), 2000);
     } catch (err) {
       setError("Failed to update product. Please try again.");
@@ -108,11 +109,14 @@ const EditProduct = ({ params }: { params: { id: string } }) => {
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <div className="p-6">
             <div className="mb-6 flex items-center">
-              <img
+            <Image
                 src={product.thumbnail}
                 alt={product.title}
-                className="w-24 h-24 object-cover rounded-md mr-4"
-              />
+                width={96}  // This is equivalent to w-24 in Tailwind (24 * 4px)
+                height={96} // This is equivalent to h-24 in Tailwind (24 * 4px)
+                className="rounded-md mr-4"
+                style={{ objectFit: 'cover' }}
+            />
               <div>
                 <h2 className="text-xl font-semibold text-gray-800">{product.title}</h2>
                 <p className="text-sm text-gray-500">ID: {product.id}</p>
